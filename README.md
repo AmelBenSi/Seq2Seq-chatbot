@@ -1,8 +1,52 @@
-# Seq2Seq chatbot — No Attention vs Attention 
+# Seq2Seq Chatbot — No Attention vs Attention + BLEU + Flask UI
+
 Notebook-based NLP project (imported from **Google Colab**) that builds a **Seq2Seq** model for text generation / chatbot-style responses, compares:
 - **Seq2Seq without Attention**
 - **Seq2Seq with Attention**
 and evaluates both using **BLEU**, then demonstrates a simple **Flask UI**.
+
+---
+
+## What this repo does
+It builds a **Seq2Seq** chatbot/text-generation pipeline using:
+- Data loading + cleaning
+- Text processing (tokenization + sequence building + padding)
+- Two model variants:
+  - **Seq2Seq without Attention**
+  - **Seq2Seq with Attention**
+- Evaluation using **BLEU**
+- A simple **Flask UI** demo notebook
+
+---
+
+## Dataset — Ubuntu Dialogue Corpus
+
+This project uses the **Ubuntu Dialogue Corpus**, consisting of almost **one million** two-person conversations extracted from Ubuntu chat logs.  
+It contains approximately **930,000 dialogues** spanning about **100,000,000 words**, making it well-suited for training chatbot models.
+
+### Download
+- Official dataset page: https://www.kaggle.com/datasets/rtatman/ubuntu-dialogue-corpus
+
+### How to use it
+1. Download the Ubuntu Dialogue Corpus from the link above.
+2. Place it under the directory defined in `config.py` (`MAIN_DIR_PATH`), **or** update `MAIN_DIR_PATH` to match your local setup.
+3. Run the notebooks in order starting from **`01-DataLoad.ipynb`**.
+
+> The pipeline saves intermediate artifacts (CSV/NPZ/JSON) so later notebooks can run faster without repeating earlier steps.
+
+---
+
+## Note: known issue (Question–Answer pair creation needs fixing)
+
+The code still needs a **small update** in the step where **question–answer (input–output) pairs** are created, to ensure **correct alignment** between encoder inputs and decoder targets.
+
+### What to verify / fix (recommended)
+- **Do not cross dialogue boundaries** when pairing consecutive turns (avoid using the last utterance of one dialogue as the “question” and the first utterance of the next dialogue as the “answer”).
+- Ensure true **shifted decoder training**:
+  - `decoder_input = <SOS> + target_tokens`
+  - `decoder_output = target_tokens + <EOS>`
+  - and they are **shifted by 1** (teacher forcing alignment).
+- Confirm you **exclude turns without a valid next turn** (no corresponding output) to maintain alignment.
 
 ---
 
